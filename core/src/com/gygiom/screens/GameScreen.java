@@ -17,7 +17,6 @@ public class GameScreen implements Screen {
     private GameWorld world;
     private GameRenderer renderer;
     
- // Ёто конструктор, не объ€вление класса
     public GameScreen() {
         Gdx.app.log("GameScreen", "Attached");
         world = new GameWorld();
