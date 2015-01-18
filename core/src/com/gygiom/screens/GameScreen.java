@@ -7,27 +7,32 @@
  */
 package com.gygiom.screens;
 
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.Screen;
+import com.gygiom.gameworld.GameRenderer;
+import com.gygiom.gameworld.GameWorld;
 
 public class GameScreen implements Screen {
-
-	public GameScreen() {
+    
+    private GameWorld world;
+    private GameRenderer renderer;
+    
+ // Это конструктор, не объявление класса
+    public GameScreen() {
         Gdx.app.log("GameScreen", "Attached");
+        world = new GameWorld();
+        renderer = new GameRenderer(world);
     }
 
     @Override
     public void render(float delta) {
-        // Устанавливает цвет, чтобы заполнить экран с (RGB = 10, 15, 230), непрозрачность 1 (100%)
-        Gdx.gl.glClearColor(10/255.0f, 15/255.0f, 230/255.0f, 1f);
-        // Заполняет экран выбранным цветом
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        world.update(delta);
+        renderer.render();
     }
 
     @Override
     public void resize(int width, int height) {
-        Gdx.app.log("GameScreen", "resizing");
+        
     }
 
     @Override
@@ -52,8 +57,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
-        // Leave blank
+        // Оставьте пустым
     }
 
-	
 }
