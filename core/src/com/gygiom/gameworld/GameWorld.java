@@ -7,24 +7,21 @@
  */
 package com.gygiom.gameworld;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Rectangle;
+import com.gygiom.gameobjects.Bird;
 
 public class GameWorld {
-	
-	private Rectangle rect = new Rectangle(0, 0, 17, 12);
+    private Bird bird;
 
-	public void update(float delta) {
-        Gdx.app.log("GameWorld", "update");
-        rect.x++;
-        if (rect.x > 137) {
-            rect.x = 0;
-        }
-        
-	}
-	
-	
-	 public Rectangle getRect() {
-	        return rect;
-	    }
+    public GameWorld(int midPointY)  {
+    	bird = new Bird(33, midPointY - 5, 17, 12);
+    }
+
+    public void update(float delta) {
+        bird.update(delta);
+    }
+
+    public Bird getBird() {
+        return bird;
+
+    }
 }
