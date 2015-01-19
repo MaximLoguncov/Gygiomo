@@ -12,7 +12,7 @@ import com.badlogic.gdx.Screen;
 import com.gygiom.gameworld.GameRenderer;
 import com.gygiom.gameworld.GameWorld;
 import com.gygiom.gyHelpers.InputHandler;
-import com.gygiom.gameobjects.Bird;
+
 
 public class GameScreen implements Screen {
 
@@ -38,11 +38,11 @@ public class GameScreen implements Screen {
     }
 
     @Override
-    public void render(float delta) {
-        runTime += delta;
-        world.update(delta);
-        renderer.render(runTime);
-    }
+	public void render(float delta) {
+		runTime += delta;
+		world.update(delta);
+		renderer.render(runTime);
+	}
 
     @Override
     public void resize(int width, int height) {
