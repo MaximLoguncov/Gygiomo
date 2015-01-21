@@ -2,12 +2,13 @@
  * 
  */
 /**
- * @author Максим
+ * @author LoguncovMaxim
  *
  */
 package com.gygiom.gameworld;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -33,13 +34,13 @@ public class GameRenderer {
     private int midPointY;
     private int gameHeight;
 
-    // Game Objects
+    // Игровые объекты
     private Bird bird;
     private ScrollHandler scroller;
     private Grass frontGrass, backGrass;
     private Pipe pipe1, pipe2, pipe3;
 
-    // Game Assets
+    // Игровые Assets
     private TextureRegion bg, grass;
     private Animation birdAnimation;
     private TextureRegion birdMid, birdDown, birdUp;
@@ -59,7 +60,7 @@ public class GameRenderer {
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(cam.combined);
 
-        // Вызываем вспомогательные методы для инициализации объектов
+        // Вызываем вспомогательные методы, чтобы проинициализировать переменные класса
         initGameObjects();
         initAssets();
     }
@@ -80,14 +81,14 @@ public class GameRenderer {
         birdAnimation = AssetLoader.birdAnimation;
         birdMid = AssetLoader.bird;
         birdDown = AssetLoader.birdDown;
-        setBirdUp(AssetLoader.birdUp);
+        birdUp = AssetLoader.birdUp;
         skullUp = AssetLoader.skullUp;
         skullDown = AssetLoader.skullDown;
         bar = AssetLoader.bar;
     }
 
     private void drawGrass() {
-        // Отрисовываем траву
+        // Отрисовка травы
         batcher.draw(grass, frontGrass.getX(), frontGrass.getY(),
                 frontGrass.getWidth(), frontGrass.getHeight());
         batcher.draw(grass, backGrass.getX(), backGrass.getY(),
@@ -95,8 +96,8 @@ public class GameRenderer {
     }
 
     private void drawSkulls() {
-        // Временный код, извините за кашу :)
-        // Мы это починим, как только закончим с Pipe классом.
+        // Временный код, измените за кашу :)
+        // Мы исправим это когда закончим с классом Pipe.
 
         batcher.draw(skullUp, pipe1.getX() - 1,
                 pipe1.getY() + pipe1.getHeight() - 14, 24, 14);
@@ -115,9 +116,8 @@ public class GameRenderer {
     }
 
     private void drawPipes() {
-        // Временный код, извините за кашу :)
-        // Мы это починим, как только закончим с Pipe классом.
-
+        // Временный код, измените за кашу :)
+        // Мы исправим это когда закончим с классом Grass.
         batcher.draw(bar, pipe1.getX(), pipe1.getY(), pipe1.getWidth(),
                 pipe1.getHeight());
         batcher.draw(bar, pipe1.getX(), pipe1.getY() + pipe1.getHeight() + 45,
@@ -141,15 +141,15 @@ public class GameRenderer {
 
         shapeRenderer.begin(ShapeType.Filled);
 
-        // Отрисовываем задний фон
+        // Отрисуем задний фон
         shapeRenderer.setColor(55 / 255.0f, 80 / 255.0f, 100 / 255.0f, 1);
         shapeRenderer.rect(0, 0, 136, midPointY + 66);
 
-        // Отрисовываем Grass
+        // Отрисуем техническую Grass
         shapeRenderer.setColor(111 / 255.0f, 186 / 255.0f, 45 / 255.0f, 1);
         shapeRenderer.rect(0, midPointY + 66, 136, 11);
 
-        // Отрисовываем Dirt
+        // Отрисуем техническую Dirt
         shapeRenderer.setColor(147 / 255.0f, 80 / 255.0f, 27 / 255.0f, 1);
         shapeRenderer.rect(0, midPointY + 77, 136, 52);
 
@@ -159,14 +159,14 @@ public class GameRenderer {
         batcher.disableBlending();
         batcher.draw(bg, 0, midPointY + 23, 136, 43);
 
-        // 1. Отрисовываем Grass
+        // 1. Отрисовка Grass
         drawGrass();
 
-        // 2. Отрисовываем Pipes
+        // 2. Отрисовка Pipes
         drawPipes();
         batcher.enableBlending();
 
-        // 3. Отрисовываем Skulls (необходима прозрачность)
+        // 3. Отрисовка Skulls (требуется включить прозрачность)
         drawSkulls();
 
         if (bird.shouldntFlap()) {
@@ -185,13 +185,4 @@ public class GameRenderer {
 
     }
 
-	public TextureRegion getBirdUp() {
-		return birdUp;
-	}
-
-	public void setBirdUp(TextureRegion birdUp) {
-		this.birdUp = birdUp;
-	}
-
 }
-

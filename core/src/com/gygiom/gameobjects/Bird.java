@@ -7,7 +7,7 @@
  */
 package com.gygiom.gameobjects;
 
-
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 
 public class Bird {
@@ -16,9 +16,11 @@ public class Bird {
     private Vector2 velocity;
     private Vector2 acceleration;
 
-    private float rotation; // // Для обработки поворота птицы
+    private float rotation;
     private int width;
     private int height;
+
+    private Circle boundingCircle;
 
     public Bird(float x, float y, int width, int height) {
         this.width = width;
@@ -26,6 +28,7 @@ public class Bird {
         position = new Vector2(x, y);
         velocity = new Vector2(0, 0);
         acceleration = new Vector2(0, 460);
+        boundingCircle = new Circle();
     }
 
     public void update(float delta) {
@@ -37,8 +40,12 @@ public class Bird {
         }
 
         position.add(velocity.cpy().scl(delta));
-        
-        // повернуть против часовой стрелки
+
+        // Выставите координаты круга следующими (9, 6) относительно птицы.
+        // Установите радиус круга равным 6.5f;
+        boundingCircle.set(position.x + 9, position.y + 6, 6.5f);
+
+        // Повернуть против часовой стрелки
         if (velocity.y < 0) {
             rotation -= 600 * delta;
 
@@ -65,7 +72,7 @@ public class Bird {
     public boolean shouldntFlap() {
         return velocity.y > 70;
     }
-    
+
     public void onClick() {
         velocity.y = -140;
     }
@@ -88,6 +95,10 @@ public class Bird {
 
     public float getRotation() {
         return rotation;
+    }
+
+    public Circle getBoundingCircle() {
+        return boundingCircle;
     }
 
 }

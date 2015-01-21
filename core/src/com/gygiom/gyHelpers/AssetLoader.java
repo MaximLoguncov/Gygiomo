@@ -1,6 +1,7 @@
 package com.gygiom.gyHelpers;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -15,6 +16,8 @@ public class AssetLoader {
     public static TextureRegion bird, birdDown, birdUp;
 
     public static TextureRegion skullUp, skullDown, bar;
+    
+    public static Sound dead;
 
     public static void load() {
 
@@ -36,22 +39,24 @@ public class AssetLoader {
         birdUp = new TextureRegion(texture, 170, 0, 17, 12);
         birdUp.flip(false, true);
 
-        TextureRegion[] birds = { birdDown, bird, birdUp }; // создаем массив из объектов TextureRegion
-        birdAnimation = new Animation(0.06f, birds); // Создаем новый объект типа Animation в котором каждый фрейм длиться 0.06 секунд, используя созданный массив.
-        birdAnimation.setPlayMode(Animation.PlayMode.LOOP_PINGPONG); // Выставляем режим проигрывания типа ping pong, анимация будет проигрываться вперед-назад.
+        TextureRegion[] birds = { birdDown, bird, birdUp };
+        birdAnimation = new Animation(0.06f, birds);
+        birdAnimation.setPlayMode(Animation.PlayMode.LOOP_PINGPONG);
 
         skullUp = new TextureRegion(texture, 192, 0, 24, 14);
-        
+        // Создадим перевернув существующий skullUp
         skullDown = new TextureRegion(skullUp);
         skullDown.flip(false, true);
 
         bar = new TextureRegion(texture, 136, 16, 22, 3);
         bar.flip(false, true);
+        
+        dead = Gdx.audio.newSound(Gdx.files.internal("data/dead.wav"));
 
     }
 
     public static void dispose() {
-        // Мы должны избавляться от текстур, когда заканчивает работать с объектом в котором есть текстуры
+        // Когда завершаем работу необходимо освобождать текстуры, вызывая метод dispose.
         texture.dispose();
     }
 

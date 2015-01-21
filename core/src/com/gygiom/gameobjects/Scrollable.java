@@ -4,7 +4,8 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Scrollable {
 
-    // Protected похож private, но позволяет наследоваться в дочерних классах.
+    // Protected очень похоже на private, но позволяет наследование в дочерних
+    // класссах.
     protected Vector2 position;
     protected Vector2 velocity;
     protected int width;
@@ -22,20 +23,23 @@ public class Scrollable {
     public void update(float delta) {
         position.add(velocity.cpy().scl(delta));
 
-        // Если объект Scrollable более не виден:
+        // Если объект Scollable более не виден:
         if (position.x + width < 0) {
             isScrolledLeft = true;
         }
     }
 
-    // Reset: Нужно переопределять в дочернем классе, если необходимо описать
-    // другое поведение
+    // Reset: Должен переопределять родительский для специфического поведения.
     public void reset(float newX) {
         position.x = newX;
         isScrolledLeft = false;
     }
 
-    // Методы доступа к переменым класса
+    public void stop() {
+        velocity.x = 0;
+    }
+
+    // Методы доступа к переменным класса
     public boolean isScrolledLeft() {
         return isScrolledLeft;
     }
