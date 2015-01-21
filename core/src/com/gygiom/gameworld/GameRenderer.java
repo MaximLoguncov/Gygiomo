@@ -8,7 +8,6 @@
 package com.gygiom.gameworld;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -21,6 +20,7 @@ import com.gygiom.gyHelpers.AssetLoader;
 import com.gygiom.gameobjects.Grass;
 import com.gygiom.gameobjects.Pipe;
 import com.gygiom.gameobjects.ScrollHandler;
+
 
 
 public class GameRenderer {
@@ -40,7 +40,7 @@ public class GameRenderer {
     private Grass frontGrass, backGrass;
     private Pipe pipe1, pipe2, pipe3;
 
-    // Игровые Assets
+    // Ресурсы игры
     private TextureRegion bg, grass;
     private Animation birdAnimation;
     private TextureRegion birdMid, birdDown, birdUp;
@@ -60,7 +60,7 @@ public class GameRenderer {
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(cam.combined);
 
-        // Вызываем вспомогательные методы, чтобы проинициализировать переменные класса
+        // Вызовим вспомогательные методы, чтобы инициализировать переменные класса
         initGameObjects();
         initAssets();
     }
@@ -88,7 +88,7 @@ public class GameRenderer {
     }
 
     private void drawGrass() {
-        // Отрисовка травы
+        // Отрисуем траву
         batcher.draw(grass, frontGrass.getX(), frontGrass.getY(),
                 frontGrass.getWidth(), frontGrass.getHeight());
         batcher.draw(grass, backGrass.getX(), backGrass.getY(),
@@ -96,9 +96,6 @@ public class GameRenderer {
     }
 
     private void drawSkulls() {
-        // Временный код, измените за кашу :)
-        // Мы исправим это когда закончим с классом Pipe.
-
         batcher.draw(skullUp, pipe1.getX() - 1,
                 pipe1.getY() + pipe1.getHeight() - 14, 24, 14);
         batcher.draw(skullDown, pipe1.getX() - 1,
@@ -116,8 +113,6 @@ public class GameRenderer {
     }
 
     private void drawPipes() {
-        // Временный код, измените за кашу :)
-        // Мы исправим это когда закончим с классом Grass.
         batcher.draw(bar, pipe1.getX(), pipe1.getY(), pipe1.getWidth(),
                 pipe1.getHeight());
         batcher.draw(bar, pipe1.getX(), pipe1.getY() + pipe1.getHeight() + 45,
@@ -141,15 +136,15 @@ public class GameRenderer {
 
         shapeRenderer.begin(ShapeType.Filled);
 
-        // Отрисуем задний фон
+        // Отрисуем цвет заднего фона
         shapeRenderer.setColor(55 / 255.0f, 80 / 255.0f, 100 / 255.0f, 1);
         shapeRenderer.rect(0, 0, 136, midPointY + 66);
 
-        // Отрисуем техническую Grass
+        // Отрисуем траву
         shapeRenderer.setColor(111 / 255.0f, 186 / 255.0f, 45 / 255.0f, 1);
         shapeRenderer.rect(0, midPointY + 66, 136, 11);
 
-        // Отрисуем техническую Dirt
+        // Отрисуем грязь
         shapeRenderer.setColor(147 / 255.0f, 80 / 255.0f, 27 / 255.0f, 1);
         shapeRenderer.rect(0, midPointY + 77, 136, 52);
 
@@ -159,14 +154,14 @@ public class GameRenderer {
         batcher.disableBlending();
         batcher.draw(bg, 0, midPointY + 23, 136, 43);
 
-        // 1. Отрисовка Grass
+        // 1. Рисуем траву
         drawGrass();
 
-        // 2. Отрисовка Pipes
+        // 2. Рисуем трубы
         drawPipes();
         batcher.enableBlending();
 
-        // 3. Отрисовка Skulls (требуется включить прозрачность)
+        // 3. Рисуем черепа(нужна прозрачность)
         drawSkulls();
 
         if (bird.shouldntFlap()) {
@@ -181,8 +176,17 @@ public class GameRenderer {
                     1, 1, bird.getRotation());
         }
 
+        // Переводим integer в String
+        String score = myWorld.getScore() + "";
+
+        // Сначала отрисовываем тень
+        AssetLoader.shadow.draw(batcher, "" + myWorld.getScore(), (136 / 2)
+                - (3 * score.length()), 12);
+        // Отрисуем сам текст
+        AssetLoader.font.draw(batcher, "" + myWorld.getScore(), (136 / 2)
+                - (3 * score.length() - 1), 11);
+
         batcher.end();
 
     }
-
 }
