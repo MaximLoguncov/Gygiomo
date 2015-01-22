@@ -34,13 +34,11 @@ public class GameRenderer {
     private int midPointY;
     private int gameHeight;
 
-    // Игровые объекты
     private Bird bird;
     private ScrollHandler scroller;
     private Grass frontGrass, backGrass;
     private Pipe pipe1, pipe2, pipe3;
 
-    // Ресурсы игры
     private TextureRegion bg, grass;
     private Animation birdAnimation;
     private TextureRegion birdMid, birdDown, birdUp;
@@ -60,7 +58,6 @@ public class GameRenderer {
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(cam.combined);
 
-        // Вызовим вспомогательные методы, чтобы инициализировать переменные класса
         initGameObjects();
         initAssets();
     }
@@ -88,7 +85,6 @@ public class GameRenderer {
     }
 
     private void drawGrass() {
-        // Отрисуем траву
         batcher.draw(grass, frontGrass.getX(), frontGrass.getY(),
                 frontGrass.getWidth(), frontGrass.getHeight());
         batcher.draw(grass, backGrass.getX(), backGrass.getY(),
@@ -136,15 +132,12 @@ public class GameRenderer {
 
         shapeRenderer.begin(ShapeType.Filled);
 
-        // Отрисуем цвет заднего фона
         shapeRenderer.setColor(55 / 255.0f, 80 / 255.0f, 100 / 255.0f, 1);
         shapeRenderer.rect(0, 0, 136, midPointY + 66);
 
-        // Отрисуем траву
         shapeRenderer.setColor(111 / 255.0f, 186 / 255.0f, 45 / 255.0f, 1);
         shapeRenderer.rect(0, midPointY + 66, 136, 11);
 
-        // Отрисуем грязь
         shapeRenderer.setColor(147 / 255.0f, 80 / 255.0f, 27 / 255.0f, 1);
         shapeRenderer.rect(0, midPointY + 77, 136, 52);
 
@@ -154,14 +147,11 @@ public class GameRenderer {
         batcher.disableBlending();
         batcher.draw(bg, 0, midPointY + 23, 136, 43);
 
-        // 1. Рисуем траву
         drawGrass();
 
-        // 2. Рисуем трубы
         drawPipes();
         batcher.enableBlending();
 
-        // 3. Рисуем черепа(нужна прозрачность)
         drawSkulls();
 
         if (bird.shouldntFlap()) {
@@ -176,15 +166,57 @@ public class GameRenderer {
                     1, 1, bird.getRotation());
         }
 
-        // Переводим integer в String
-        String score = myWorld.getScore() + "";
+        // ВРЕМЕННЫЙ КОД! Исправим чуть позже!
 
-        // Сначала отрисовываем тень
-        AssetLoader.shadow.draw(batcher, "" + myWorld.getScore(), (136 / 2)
-                - (3 * score.length()), 12);
-        // Отрисуем сам текст
-        AssetLoader.font.draw(batcher, "" + myWorld.getScore(), (136 / 2)
-                - (3 * score.length() - 1), 11);
+        if (myWorld.isReady()) {
+            // Отрисуем сначала тень
+            AssetLoader.shadow.draw(batcher, "Touch me", (136 / 2) - (42), 76);
+            // А теперь сам текст
+            AssetLoader.font
+                    .draw(batcher, "Touch me", (136 / 2) - (42 - 1), 75);
+        } else {
+
+            if (myWorld.isGameOver() || myWorld.isHighScore()) {
+
+                if (myWorld.isGameOver()) {
+                    AssetLoader.shadow.draw(batcher, "Game Over", 25, 56);
+                    AssetLoader.font.draw(batcher, "Game Over", 24, 55);
+
+                    AssetLoader.shadow.draw(batcher, "High Score:", 23, 106);
+                    AssetLoader.font.draw(batcher, "High Score:", 22, 105);
+
+                    String highScore = AssetLoader.getHighScore() + "";
+
+                    AssetLoader.shadow.draw(batcher, highScore, (136 / 2)
+                            - (3 * highScore.length()), 128);
+                    AssetLoader.font.draw(batcher, highScore, (136 / 2)
+                            - (3 * highScore.length() - 1), 127);
+                } else {
+                    AssetLoader.shadow.draw(batcher, "High Score!", 19, 56);
+                    AssetLoader.font.draw(batcher, "High Score!", 18, 55);
+                }
+
+                AssetLoader.shadow.draw(batcher, "Try again?", 23, 76);
+                AssetLoader.font.draw(batcher, "Try again?", 24, 75);
+
+                // Конвертируем integer в String
+                String score = myWorld.getScore() + "";
+
+                AssetLoader.shadow.draw(batcher, score,
+                        (136 / 2) - (3 * score.length()), 12);
+                AssetLoader.font.draw(batcher, score,
+                        (136 / 2) - (3 * score.length() - 1), 11);
+
+            }
+
+            String score = myWorld.getScore() + "";
+
+            AssetLoader.shadow.draw(batcher, "" + myWorld.getScore(), (136 / 2)
+                    - (3 * score.length()), 12);
+            AssetLoader.font.draw(batcher, "" + myWorld.getScore(), (136 / 2)
+                    - (3 * score.length() - 1), 11);
+
+        }
 
         batcher.end();
 

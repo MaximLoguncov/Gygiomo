@@ -20,18 +20,63 @@ public class GameWorld {
     private ScrollHandler scroller;
     private Rectangle ground;
     private int score = 0;
+
+    private int midPointY;
+
+    private GameState currentState;
+
+    public enum GameState {
+        READY, RUNNING, GAMEOVER, HIGHSCORE
+    }
     
+    public boolean isHighScore() {
+        return currentState == GameState.HIGHSCORE;
+    }
+
     public GameWorld(int midPointY) {
+        currentState = GameState.READY;
+        this.midPointY = midPointY;
         bird = new Bird(33, midPointY - 5, 17, 12);
-        //трава должна начинаться на 66 писеля ниже midPointY
-        scroller = new ScrollHandler(null, midPointY + 66);
+        // Трава должна начинаться на 66 пиксилей ниже чем знаение midPointY
+        scroller = new ScrollHandler(this, midPointY + 66);
         ground = new Rectangle(0, midPointY + 66, 137, 11);
     }
 
     public void update(float delta) {
-        // добавим лимит по дельте, так что если будут тормоза
-        // во время обновленя, то работа с колизией не будет нарушена
 
+        switch (currentState) {
+        case READY:
+            updateReady(delta);
+            break;
+
+        case RUNNING:
+            updateRunning(delta);
+            break;
+        default:
+            break;
+        }
+        
+        if (Intersector.overlaps(bird.getBoundingCircle(), ground)) {
+            scroller.stop();
+            bird.die();
+            bird.decelerate();
+            currentState = GameState.GAMEOVER;
+            
+            if (score > AssetLoader.getHighScore()) {
+                AssetLoader.setHighScore(score);
+                currentState = GameState.HIGHSCORE;
+            }
+        }
+        
+        
+
+    }
+
+    private void updateReady(float delta) {
+        // Пока ничего не делаем
+    }
+
+    public void updateRunning(float delta) {
         if (delta > .15f) {
             delta = .15f;
         }
@@ -49,6 +94,7 @@ public class GameWorld {
             scroller.stop();
             bird.die();
             bird.decelerate();
+            currentState = GameState.GAMEOVER;
         }
     }
 
@@ -60,12 +106,32 @@ public class GameWorld {
     public ScrollHandler getScroller() {
         return scroller;
     }
-    
+
     public int getScore() {
         return score;
     }
-    
+
     public void addScore(int increment) {
         score += increment;
+    }
+
+    public boolean isReady() {
+        return currentState == GameState.READY;
+    }
+
+    public void start() {
+        currentState = GameState.RUNNING;
+    }
+
+    public void restart() {
+        currentState = GameState.READY;
+        score = 0;
+        bird.onRestart(midPointY - 5);
+        scroller.onRestart();
+        currentState = GameState.READY;
+    }
+
+    public boolean isGameOver() {
+        return currentState == GameState.GAMEOVER;
     }
 }

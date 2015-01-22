@@ -9,23 +9,36 @@ package com.gygiom.gyHelpers;
 
 import com.badlogic.gdx.InputProcessor;
 import com.gygiom.gameobjects.Bird;
-
-
+import com.gygiom.gameworld.GameWorld;
 
 public class InputHandler implements InputProcessor {
-
     private Bird myBird;
+    private GameWorld myWorld;
 
-    // запрашиваем ссылку на Bird когда InputHandler создан.
-    public InputHandler(Bird bird) {
-        // myBird является ссылкой на  bird в gameWorld.
-        myBird = bird;
+    // Запросим ссылку на объект Bird когда InputHandler создан.
+    public InputHandler(GameWorld myWorld) {
+        // myBird это объект Bird в gameWorld.
+        this.myWorld = myWorld;
+        myBird = myWorld.getBird();
     }
+    
+    
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+
+        if (myWorld.isReady()) {
+            myWorld.start();
+        }
+
         myBird.onClick();
-        return true; // Вернем true чтобы сообщим, что мы обработали касание.
+
+        if (myWorld.isGameOver()) {
+            // Обнулим все перменные, перейдем в GameState.READ
+            myWorld.restart();
+        }
+
+        return true;
     }
 
     @Override

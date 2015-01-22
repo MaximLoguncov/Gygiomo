@@ -3,14 +3,21 @@ package com.gygiom.gameobjects;
 import com.gygiom.gameobjects.Grass;
 import com.gygiom.gameobjects.Pipe;
 
+import com.gygiom.gameworld.GameWorld;
+import com.gygiom.gyHelpers.AssetLoader;
+
+
 public class ScrollHandler {
 
     private Grass frontGrass, backGrass;
     private Pipe pipe1, pipe2, pipe3;
     public static final int SCROLL_SPEED = -59;
     public static final int PIPE_GAP = 49;
+    
+    private GameWorld gameWorld;
 
-    public ScrollHandler(float yPos) {
+    public ScrollHandler(GameWorld gameWorld, float yPos) {
+        this.gameWorld = gameWorld;
         frontGrass = new Grass(0, yPos, 143, 11, SCROLL_SPEED);
         backGrass = new Grass(frontGrass.getTailX(), yPos, 143, 11,
                 SCROLL_SPEED);
@@ -21,17 +28,25 @@ public class ScrollHandler {
         pipe3 = new Pipe(pipe2.getTailX() + PIPE_GAP, 0, 22, 60, SCROLL_SPEED,
                 yPos);
     }
+    
+    public void onRestart() {
+        frontGrass.onRestart(0, SCROLL_SPEED);
+        backGrass.onRestart(frontGrass.getTailX(), SCROLL_SPEED);
+        pipe1.onRestart(210, SCROLL_SPEED);
+        pipe2.onRestart(pipe1.getTailX() + PIPE_GAP, SCROLL_SPEED);
+        pipe3.onRestart(pipe2.getTailX() + PIPE_GAP, SCROLL_SPEED);
+    }
 
     public void update(float delta) {
-        // Обновление наших объектов
+        // Обновим наши объекты
         frontGrass.update(delta);
         backGrass.update(delta);
         pipe1.update(delta);
         pipe2.update(delta);
         pipe3.update(delta);
 
-        // Проверим если хоть одна из наших труб уехала влево
-        // и сбросим ее позицию
+        // Проверим если какая, то из труб оказалась за левой границей экрана
+        // и сбросим ее положение
         if (pipe1.isScrolledLeft()) {
             pipe1.reset(pipe3.getTailX() + PIPE_GAP);
         } else if (pipe2.isScrolledLeft()) {
@@ -41,7 +56,7 @@ public class ScrollHandler {
             pipe3.reset(pipe2.getTailX() + PIPE_GAP);
         }
 
-        // Тоже самое с травой
+        // Аналогично с травой
         if (frontGrass.isScrolledLeft()) {
             frontGrass.reset(backGrass.getTailX());
 
@@ -60,8 +75,35 @@ public class ScrollHandler {
     }
 
     public boolean collides(Bird bird) {
+
+        if (!pipe1.isScored()
+                && pipe1.getX() + (pipe1.getWidth() / 2) < bird.getX()
+                        + bird.getWidth()) {
+            addScore(1);
+            pipe1.setScored(true);
+            AssetLoader.coin.play();
+        } else if (!pipe2.isScored()
+                && pipe2.getX() + (pipe2.getWidth() / 2) < bird.getX()
+                        + bird.getWidth()) {
+            addScore(1);
+            pipe2.setScored(true);
+            AssetLoader.coin.play();
+
+        } else if (!pipe3.isScored()
+                && pipe3.getX() + (pipe3.getWidth() / 2) < bird.getX()
+                        + bird.getWidth()) {
+            addScore(1);
+            pipe3.setScored(true);
+            AssetLoader.coin.play();
+
+        }
+
         return (pipe1.collides(bird) || pipe2.collides(bird) || pipe3
                 .collides(bird));
+    }
+
+    private void addScore(int increment) {
+        gameWorld.addScore(increment);
     }
 
     public Grass getFrontGrass() {
@@ -85,3 +127,4 @@ public class ScrollHandler {
     }
 
 }
+

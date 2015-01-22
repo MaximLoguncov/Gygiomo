@@ -16,11 +16,11 @@ public class Pipe extends Scrollable {
     public static final int SKULL_HEIGHT = 11;
     private float groundY;
 
-    // Когда конструктор класса Pipe вызван – вызовите родительский (Scrollable)
+    private boolean isScored = false;
+
     public Pipe(float x, float y, int width, int height, float scrollSpeed,
             float groundY) {
         super(x, y, width, height, scrollSpeed);
-        // Инициализируйте объект типа Random для генерации случайных чисел
         r = new Random();
         skullUp = new Rectangle();
         skullDown = new Rectangle();
@@ -32,21 +32,13 @@ public class Pipe extends Scrollable {
 
     @Override
     public void update(float delta) {
-        // Вызовите метод update в родительском классе (Scrollable)
         super.update(delta);
 
-        // Метод set() повзоляет нам выставить координаты левого верхнего угла - x, y
-        // вместе с width и height
 
         barUp.set(position.x, position.y, width, height);
         barDown.set(position.x, position.y + height + VERTICAL_GAP, width,
                 groundY - (position.y + height + VERTICAL_GAP));
 
-        // Ширина черепа 24 пикселя. Ширина трубы всего 22 пикселя. Так что череп
-        // должен быть смещен на 1 пиксель влево (так что череп будет отцентрирован 
-        // относительно трубы).
-
-        // This shift is equivalent to: (SKULL_WIDTH - width) / 2
         skullUp.set(position.x - (SKULL_WIDTH - width) / 2, position.y + height
                 - SKULL_HEIGHT, SKULL_WIDTH, SKULL_HEIGHT);
         skullDown.set(position.x - (SKULL_WIDTH - width) / 2, barDown.y,
@@ -56,10 +48,14 @@ public class Pipe extends Scrollable {
 
     @Override
     public void reset(float newX) {
-        //Вызовите метод reset в родительском классе (Scrollable)
         super.reset(newX);
-        // Измените высоту на случайное значение
         height = r.nextInt(90) + 15;
+        isScored = false;
+    }
+
+    public void onRestart(float x, float scrollSpeed) {
+        velocity.x = scrollSpeed;
+        reset(x);
     }
 
     public Rectangle getSkullUp() {
@@ -88,4 +84,11 @@ public class Pipe extends Scrollable {
         return false;
     }
 
+    public boolean isScored() {
+        return isScored;
+    }
+
+    public void setScored(boolean b) {
+        isScored = b;
+    }
 }
